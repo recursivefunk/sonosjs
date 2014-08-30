@@ -3,12 +3,10 @@
 
 // native modules
 var events           = require( 'events' );
-
 // third party modules
 var SonosDiscovery   = require( 'sonos-discovery' );
-
 // app modules
-var devicesUtils     = require( './lib/devices' );
+var environment      = require( './lib/environment' );
 
 var SonosJS = function() {
   var self = this;
@@ -16,17 +14,24 @@ var SonosJS = function() {
 
   this._maxDiscoveryAttempts = 20;
   this._discovery = new SonosDiscovery();
-
-  devicesUtils
-    .discoverDevices( this._discovery )
-    .on('zones', function(zones){
-      self._zones = zones;
-      self.emit( 'ready', self._zones );
-    });
+  this.syncEnvironment();
 
   return this;
 };
 
 SonosJS.prototype.__proto__ = events.EventEmitter.prototype;
+
+SonosJS.prototype.syncEnvironment = function() {
+  var self = this;
+
+  environment
+    .discoverZones( this._discovery )
+    .on('zones', function(zones){
+      self._zones = zones;
+      self.emit( 'sync', self._zones );
+    });
+
+  return this;
+};
 
 module.exports = SonosJS;

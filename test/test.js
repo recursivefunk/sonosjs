@@ -1,5 +1,5 @@
 
-/*global describe:false, it:false*/
+/* global describe:false, it:false */
 
 'use strict';
 
@@ -11,11 +11,16 @@ describe('SonosJS', function(){
   var sonosjs;
 
   it('Discovers Zones', function(done){
-    sonosjs = new SonosJS().on( 'ready', function(zones){
-       zones.should.be.ok;
-       zones.length.should.be.above( 0 );
-       done();
-    })
+
+    sonosjs =
+
+      new SonosJS()
+
+      .on('sync', function(zones){
+         zones.should.be.ok;
+         zones.length.should.be.above( 0 );
+         done();
+      })
   });
 
 });
