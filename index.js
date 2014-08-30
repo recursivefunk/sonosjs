@@ -25,7 +25,7 @@ SonosJS.prototype.syncEnvironment = function() {
   var self = this;
 
   environment
-    .discoverZones( this._discovery )
+    .discover( this._discovery )
     .on('zones', function(zones){
       self._zones = zones;
       self.emit( 'sync', self._zones );
