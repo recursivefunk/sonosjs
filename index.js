@@ -19,7 +19,7 @@ var SonosJS = function() {
   return this;
 };
 
-SonosJS.prototype.__proto__ = events.EventEmitter.prototype;
+SonosJS.prototype.__proto__ = events..prototype;
 
 SonosJS.prototype.syncEnvironment = function() {
   var self = this;
