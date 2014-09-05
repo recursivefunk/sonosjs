@@ -4,6 +4,7 @@
 'use strict';
 
 var should    = require( 'should' );
+var logger    = require( 'luvely' );
 var SonosJS   = require( '../index' );
 
 describe('SonosJS', function(){
@@ -21,6 +22,14 @@ describe('SonosJS', function(){
          zones.length.should.be.above( 0 );
          done();
       })
+
+      // there are probably no zones on the network
+      .on('error', function(err){
+        err.type.should.equal( 'sync' );
+        logger.error( err.msg );
+        done();
+      });
+
   });
 
 });
