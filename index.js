@@ -3,7 +3,7 @@
 
 // native modules
 var util             = require( 'util' );
-var EventEmitter     = require( 'events' ).EventEmitter;;
+var EventEmitter     = require( 'events' ).EventEmitter;
 // third party modules
 var logger           = require( 'luvely' );
 var SonosDiscovery   = require( 'sonos-discovery' );
@@ -15,6 +15,7 @@ var SonosJS = function() {
 
   this._discovery = new SonosDiscovery();
   this._environment = new Environment( this._discovery );
+  this._hasSynced = false;
   this.syncEnvironment();
 
   return this;
@@ -29,9 +30,9 @@ SonosJS.prototype.syncEnvironment = function() {
 
     .discover()
 
-      .on('zones', function(zones){
-        self._zones = zones;
-        self.emit( 'sync', self._zones );
+      .on('zones', function(){
+        self.emit( 'sync' );
+        self._hasSynced = true;
       })
 
       .on('error', function(err){
@@ -41,11 +42,19 @@ SonosJS.prototype.syncEnvironment = function() {
   return this;
 };
 
+SonosJS.prototype.hasSynced = function() {
+  return this._hasSynced;
+};
+
+SonosJS.prototype.getEnvironment = function() {
+  return this._environment;
+};
+
 SonosJS.prototype._raiseError = function( type, errMsg ) {
   var error = {
     type: type || 'error',
     msg: errMsg
-  }
+  };
   this.emit( 'error', error );
 };
 

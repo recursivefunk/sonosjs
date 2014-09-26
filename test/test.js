@@ -16,19 +16,31 @@ describe('SonosJS', function(){
     sonosjs =
 
       new SonosJS()
+      
+        .on('sync', function(){
+          var zones = this.getEnvironment().getZones();
+          zones.should.be.ok;
+          zones.length.should.be.above( 0 );
+          logger.debug( 'Found ' + zones.length + ' zone(s)' );
+          zones.forEach(function(zone){
+            // verify the zone has a name
+            zone.getName().should.be.ok;
 
-      .on('sync', function(zones){
-         zones.should.be.ok;
-         zones.length.should.be.above( 0 );
-         done();
-      })
+            // verify the zone's state
+            zone.getState().should.be.ok;
 
-      // there are probably no zones on the network
-      .on('error', function(err){
-        err.type.should.equal( 'sync' );
-        logger.error( err.msg );
-        done();
-      });
+            // verify the zone has a coordinator
+            zone.getZoneCoordinator().should.be.ok;
+          });
+          done();
+        })
+
+        // there are probably no zones on the network
+        .on('error', function(err){
+          err.type.should.equal( 'sync' );
+          logger.error( err.msg );
+          done();
+        });
 
   });
 
